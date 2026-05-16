@@ -1,9 +1,28 @@
-Bandit Day 3 — Levels 0 → 3
-Level 0 → 1
-Goal: Read the file readme in home directory. Solution: cat readme Lesson: Basic file reading.
+## 🟢 Level 0 -> 1
+* **Mục tiêu:** Đọc file `readme` nằm trong thư mục hiện tại (home directory).
+* **Cách giải:**
+  ```bash
+  cat readme
+Bài học: Cách sử dụng lệnh cat cơ bản để đọc nội dung tệp tin.
 
-Level 1 → 2
-Goal: Read the file named -. Solution: cat ./- Why cat - doesn't work: - is Unix convention for stdin/stdout, not a filename. Alternatives: cat -- -, cat < -
+🟢 Level 1 -> 2
+Mục tiêu: Đọc một file có tên kỳ lạ là -
 
-Level 2 → 3
-Goal: Read a file with spaces in name. Solution: cat "./--spaces in this filename--" Lesson: Combine ./ (for filename starting with -) and quoting (for spaces). Tab completion auto-handles both.
+Cách giải:
+
+Bash
+cat ./-
+Tại sao lệnh cat - lại bị lỗi? Vì dấu - trong Linux mặc định được hiểu là đầu vào/đầu ra chuẩn (stdin/stdout) chứ không phải tên file. Phải dùng ./- để ép hệ thống hiểu đây là một đường dẫn file trong thư mục hiện tại.
+
+Cách giải khác: Có thể dùng cat -- - hoặc cat < -
+
+🟢 Level 2 -> 3
+Mục tiêu: Đọc file có tên chứa khoảng trắng (VD: spaces in this filename).
+
+Cách giải:
+
+Bash
+cat "./spaces in this filename"
+Bài học: * Cần dùng dấu ngoặc kép "" (hoặc nháy đơn '') bao quanh tên file nếu tên đó có chứa dấu cách (khoảng trắng).
+
+Mẹo : Chỉ cần gõ vài chữ cái đầu rồi ấn phím Tab, Linux sẽ tự động điền nốt tên file và tự động xử lý luôn mấy khoảng trắng này!
