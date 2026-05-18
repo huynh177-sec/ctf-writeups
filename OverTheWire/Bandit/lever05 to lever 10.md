@@ -23,3 +23,11 @@ Luồng 2 (Standard Error - stderr): Các thông báo lỗi (các dòng Permissi
 
 Bạn có thể ra lệnh cho Linux: "Hãy lọc toàn bộ các thông báo thuộc Luồng 2, và ném nó vào thùng rác cho tôi, chỉ giữ lại Luồng 1 trên màn hình".
 Để làm điều đó, ta gắn thêm cụm 2>/dev/null vào cuối câu lệnh. /dev/null trong Linux được mệnh danh là hố đen, bất cứ thứ gì ném vào đó đều biến mất không dấu vết.
+
+
+## 🟢 Level 7 -> 8
+* **Mục tiêu:** Tìm mật khẩu được giấu ngay cạnh từ `millionth` trong một tệp tin chứa lượng lớn dữ liệu rác mang tên `data.txt`.
+* **Cách giải:**
+  Sử dụng công cụ tìm kiếm văn bản `grep`:
+  ```bash
+  grep "millionth" data.txt
