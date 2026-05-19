@@ -31,3 +31,14 @@ Bạn có thể ra lệnh cho Linux: "Hãy lọc toàn bộ các thông báo thu
   Sử dụng công cụ tìm kiếm văn bản `grep`:
   ```bash
   grep "millionth" data.txt
+
+
+## 🟢 Level 8 -> 9
+* **Mục tiêu:** Tìm mật khẩu là dòng văn bản duy nhất không bị trùng lặp (chỉ xuất hiện 1 lần) trong tệp `data.txt`.
+* **Cách giải:**
+  Sử dụng kết hợp lệnh `sort` và `uniq` thông qua Pipe (`|`):
+  ```bash
+  sort data.txt | uniq -u
+sort data.txt sẽ giúp sắp xếp các file theo chiều tăng dần (A -> Z) , sau đó | sẽ chuyển output của lệnh này sang cho uniq -u.
+uniq -u: Chỉ in ra các dòng xuất hiện đúng 1 lần trong file.
+Khi đã sắp xếp tăng dần thì các file trùng lặp sẽ ở liền kề nhau, lúc này lệnh uniq -u chỉ đơn giản lọc các tệp trùng đi và giữ lại 1 file duy nhất không bị trùng. Đó là thứ trúng ta cần nắm được.
