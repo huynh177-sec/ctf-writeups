@@ -22,7 +22,7 @@ Mục tiêu: Đọc file có tên chứa khoảng trắng (VD: spaces in this fi
 Cách giải:
 
 Bash
-cat "./spaces in this filename"
+cat "./--spaces in this filename--"
 Bài học: * Cần dùng dấu ngoặc kép "" (hoặc nháy đơn '') bao quanh tên file nếu tên đó có chứa dấu cách (khoảng trắng).
 
 Mẹo : Chỉ cần gõ vài chữ cái đầu rồi ấn phím Tab, Linux sẽ tự động điền nốt tên file và tự động xử lý luôn mấy khoảng trắng này!
