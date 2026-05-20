@@ -42,3 +42,11 @@ Bạn có thể ra lệnh cho Linux: "Hãy lọc toàn bộ các thông báo thu
 sort data.txt sẽ giúp sắp xếp các file theo chiều tăng dần (A -> Z) , sau đó | sẽ chuyển output của lệnh này sang cho uniq -u.
 uniq -u: Chỉ in ra các dòng xuất hiện đúng 1 lần trong file.
 Khi đã sắp xếp tăng dần thì các file trùng lặp sẽ ở liền kề nhau, lúc này lệnh uniq -u chỉ đơn giản lọc các tệp trùng đi và giữ lại 1 file duy nhất không bị trùng. Đó là thứ trúng ta cần nắm được.
+
+
+## 🟢 Level 9 -> 10
+* **Mục tiêu:** Tìm mật khẩu bị giấu trong tệp dữ liệu nhị phân `data.txt`. Mật khẩu là một chuỗi đọc được (human-readable), nằm ngay sau vài ký tự `=`.
+* **Cách giải:**
+  Kết hợp lệnh trích xuất chuỗi và lệnh tìm kiếm văn bản:
+  ```bash
+  strings data.txt | grep "="
