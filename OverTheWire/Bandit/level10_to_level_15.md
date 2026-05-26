@@ -83,3 +83,27 @@ data5.bin  data6.bin  data8.bin  data.txt  file_bi_nen
 bandit12@bandit:/tmp/viet_huynh$ file data8.bin
 data8.bin: ASCII text
 bandit12@bandit:/tmp/viet_huynh$ cat data8.bin `
+
+
+## 🟢 Level 13 -> 14
+* **Mục tiêu:** Đăng nhập vào tài khoản `bandit14` bằng file SSH Private Key thay vì dùng mật khẩu truyền thống.
+* **Cách giải:**
+  1. Mở một Terminal mới tại máy tính cá nhân (Local machine), dùng lệnh `scp` để tải file chìa khóa từ máy chủ Bandit về máy:
+     ```bash
+     scp -P 2220 bandit13@bandit.labs.overthewire.org:~/sshkey.private .
+     ```
+  2. Thiết lập quyền bảo mật khắt khe cho file chìa khóa (bắt buộc, nếu không SSH sẽ từ chối kết nối):
+     ```bash
+     chmod 600 sshkey.private
+     ```
+  3. Dùng chiếc chìa khóa vừa tải về để "mở cửa" bước thẳng vào tài khoản `bandit14`:
+     ```bash
+     ssh -i sshkey.private bandit14@bandit.labs.overthewire.org -p 2220
+     ```
+  4. Đọc mật khẩu tại hệ thống đích:
+     ```bash
+     cat /etc/bandit_pass/bandit14
+     ```
+* **Bài học cốt lõi:**
+  * **Lệnh `scp` (Secure Copy):** Công cụ đắc lực của Sysadmin để truyền tải tệp tin xuyên Internet thông qua giao thức SSH an toàn. Cần đặc biệt chú ý đến cú pháp: cờ `-P` in hoa cho cổng, và tuyệt đối không để thừa dấu cách (space) trong đường dẫn nguồn.
+  * **Đặc tính của Private Key:** Trong Linux, file Private Key mang quyền lực tối cao nên bắt buộc phải được bảo vệ bằng quyền `600` (chỉ chủ sở hữu mới có quyền Read/Write, tước toàn bộ quyền của người ngoài).
