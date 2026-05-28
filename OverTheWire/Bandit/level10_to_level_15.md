@@ -107,3 +107,16 @@ bandit12@bandit:/tmp/viet_huynh$ cat data8.bin `
 * **Bài học cốt lõi:**
   * **Lệnh `scp` (Secure Copy):** Công cụ đắc lực của Sysadmin để truyền tải tệp tin xuyên Internet thông qua giao thức SSH an toàn. Cần đặc biệt chú ý đến cú pháp: cờ `-P` in hoa cho cổng, và tuyệt đối không để thừa dấu cách (space) trong đường dẫn nguồn.
   * **Đặc tính của Private Key:** Trong Linux, file Private Key mang quyền lực tối cao nên bắt buộc phải được bảo vệ bằng quyền `600` (chỉ chủ sở hữu mới có quyền Read/Write, tước toàn bộ quyền của người ngoài).
+    
+    
+## 🟢 Level 14 -> 15
+* **Mục tiêu:** Lấy mật khẩu của level 15 bằng cách gửi mật khẩu hiện tại (của level 14) tới cổng 30000 trên localhost.
+* **Cách giải:**
+  1. Sử dụng công cụ `nc` (Netcat) để kết nối vào cổng đích:
+     ```bash
+     nc localhost 30000
+     ```
+  2. Dán mật khẩu của tài khoản `bandit14` vào và nhấn Enter. Mật khẩu của `bandit15` sẽ lập tức được trả về.
+* **Bài học cốt lõi:**
+  * **Lệnh `nc` (Netcat):** Được xem là "con dao Thụy Sĩ" của giao thức TCP/IP. Nó cho phép bạn dễ dàng kết nối tới một cổng mạng bất kỳ để gửi và nhận dữ liệu văn bản thô (raw text).
+  * Ứng dụng thực tế: Rất hữu ích trong việc debug các dịch vụ mạng, banner grabbing (thu thập thông tin dịch vụ), hoặc thậm chí tạo ra các kết nối shell đảo ngược (reverse shells) trong kiểm thử bảo mật.
