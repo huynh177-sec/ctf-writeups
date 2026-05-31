@@ -39,6 +39,25 @@
      ssh -i sshkey17.private bandit17@bandit.labs.overthewire.org -p 2220
      cat /etc/bandit_pass/bandit17
      ```
+
+
+
+     ## 🟢 Level 17 -> 18
+* **Mục tiêu:** Tìm mật khẩu của `bandit18` được giấu dưới dạng dòng văn bản bị thay đổi duy nhất giữa hai tệp tin `passwords.old` và `passwords.new` nằm trong thư mục gốc.
+* **Cách giải:**
+  1. Đăng nhập vào máy chủ bằng tài khoản `bandit17`.
+     *(Tại đây, sử dụng thói quen liệt kê thư mục `ls -la` để phát hiện vị trí của hai tệp tin mục tiêu).*
+  2. Không sử dụng `cat` vì dữ liệu quá lớn (3300 bytes), tiến hành chạy công cụ đối chiếu để tìm điểm dị biệt:
+     ```bash
+     diff passwords.old passwords.new
+     ```
+  3. Phân tích kết quả trả về từ công cụ đối chiếu. Mật khẩu cần tìm là chuỗi văn bản nằm ở hàng có dấu `>` (biểu thị dữ liệu mới được thêm vào ở tệp `passwords.new`).
+     * `kfBf3eYk5BPBRzwjqutbbfE887SVc5Yd`
+
+* **Bài học cốt lõi:**
+  * **Lệnh `diff` (Difference):** Công cụ cốt lõi trong Linux dùng để so sánh toàn diện hai tệp tin. Dấu `<` chỉ dữ liệu cũ, dấu `>` chỉ dữ liệu mới.
+  * **Ứng dụng thực tiễn:** Trong hoạt động phân tích pháp y kỹ thuật số (Digital Forensics) và kiểm thử xâm nhập (Pentest), việc dò tìm bằng mắt thường là bất khả thi. Lệnh `diff` là vũ khí tiêu chuẩn để kiểm tra tính toàn vẹn của dữ liệu (Data Integrity Check), giúp dò ra những dòng mã độc hoặc cấu hình đã bị hacker âm thầm thay đổi.
+  * **Lưu ý chiến thuật:** Đề bài đã cảnh báo trước về cơ chế bẫy "Byebye!" của Level 18. Máy chủ sẽ tự động ngắt kết nối ngay khi đăng nhập. Đây là tín hiệu báo trước bài học tiếp theo sẽ liên quan đến kỹ thuật vượt ngục môi trường shell (Escape Shell).
 * **Bài học cốt lõi:**
   * **Lệnh `nmap` (Network Mapper):** Công cụ trinh sát tiêu chuẩn. Cờ `-sV` (Service Version) là chìa khóa để vạch trần bản chất phần mềm thực sự đang chạy ngầm sau một cổng, giúp phân biệt mục tiêu thật và honeypot (bẫy mồi).
   * **Chiến dịch tấn công mạng:** Bài học này mô phỏng trọn vẹn một quy trình thực chiến: Trinh sát hệ thống (Nmap) ➔ Xuyên thủng bảo mật (OpenSSL) ➔ Hậu khai thác và Leo quyền (SSH Key).
