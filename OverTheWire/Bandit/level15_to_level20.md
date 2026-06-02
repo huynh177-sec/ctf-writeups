@@ -62,3 +62,29 @@
   * **Lệnh `nmap` (Network Mapper):** Công cụ trinh sát tiêu chuẩn. Cờ `-sV` (Service Version) là chìa khóa để vạch trần bản chất phần mềm thực sự đang chạy ngầm sau một cổng, giúp phân biệt mục tiêu thật và honeypot (bẫy mồi).
   * **Chiến dịch tấn công mạng:** Bài học này mô phỏng trọn vẹn một quy trình thực chiến: Trinh sát hệ thống (Nmap) ➔ Xuyên thủng bảo mật (OpenSSL) ➔ Hậu khai thác và Leo quyền (SSH Key).
   * **Tư duy Không gian (Local vs Remote):** Hệ thống chặn kết nối SSH từ `localhost` là một rào cản kỹ thuật buộc người chơi phải ý thức được vị trí thực thi dòng lệnh: Phải luôn rút lui về Local để đúc chìa khóa, không được làm trên máy chủ mục tiêu.
+ 
+
+## 🟢 Level 19 -> 20 (Day 18)
+* **Mục tiêu:** Vượt qua rào cản phân quyền của hệ thống bằng cách lợi dụng một tệp tin thực thi nội bộ để đọc mật khẩu của tài khoản cấp cao hơn (`bandit20`).
+* **Cách giải:**
+  1. Đăng nhập vào tài khoản `bandit19` bằng giao thức SSH.
+  2. Rà soát môi trường hiện tại bằng lệnh liệt kê chi tiết:
+     ```bash
+     ls -la
+     ```
+     *(Phát hiện tệp tin `bandit20-do` thuộc sở hữu của `bandit20`, đặc biệt được gắn cờ SUID `s` ở nhóm quyền thực thi).*
+  3. Kiểm tra cách hoạt động của công cụ bằng cách gọi nó trong thư mục hiện tại (sử dụng dấu `./`):
+     ```bash
+     ./bandit20-do
+     ```
+     *(Hệ thống trả về hướng dẫn: Công cụ này sẽ chạy bất kỳ câu lệnh nào được truyền vào dưới tư cách của một người dùng khác).*
+  4. Thực thi đòn khai thác (Exploit). Giao cho công cụ này nhiệm vụ đọc file mật khẩu. Nó sẽ tự động "đội lốt" `bandit20` để vượt qua kiểm tra an ninh:
+     ```bash
+     ./bandit20-do cat /etc/bandit_pass/bandit20
+     ```
+  5. Thu thập mật khẩu in ra trên màn hình và lưu trữ để tiến vào Level 20.
+
+* **Bài học cốt lõi:**
+  * **Đặc quyền SUID (Set owner User ID):** Cơ chế ma thuật của Linux. Khi một file có cờ `s` được chạy, tiến trình đó sẽ mang quyền hạn của **người tạo ra file** thay vì **người bấm nút chạy**. 
+  * **Leo thang đặc quyền (Privilege Escalation):** Trong thực chiến Pentest hoặc các giải đấu CTF (mảng Pwn/Boot2Root), việc săn lùng các file có cờ SUID cấu hình lỏng lẻo là kỹ thuật kinh điển để Hacker từ một tài khoản "khách" leo lên chiếm quyền "Quản trị viên" (Root).
+  * **Cú pháp `./`:** Phân biệt rõ lệnh toàn cục (như `cat`, `ls`) và tệp thực thi nội bộ. Ký hiệu `./` chỉ định hệ điều hành chạy chính xác file đang nằm trong thư mục hiện tại.
