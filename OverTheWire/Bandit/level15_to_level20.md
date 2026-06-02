@@ -64,7 +64,7 @@
   * **Tư duy Không gian (Local vs Remote):** Hệ thống chặn kết nối SSH từ `localhost` là một rào cản kỹ thuật buộc người chơi phải ý thức được vị trí thực thi dòng lệnh: Phải luôn rút lui về Local để đúc chìa khóa, không được làm trên máy chủ mục tiêu.
  
 
-## 🟢 Level 19 -> 20 (Day 18)
+## 🟢 Level 19 -> 20 
 * **Mục tiêu:** Vượt qua rào cản phân quyền của hệ thống bằng cách lợi dụng một tệp tin thực thi nội bộ để đọc mật khẩu của tài khoản cấp cao hơn (`bandit20`).
 * **Cách giải:**
   1. Đăng nhập vào tài khoản `bandit19` bằng giao thức SSH.
