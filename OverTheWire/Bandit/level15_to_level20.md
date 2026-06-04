@@ -39,7 +39,10 @@
      ssh -i sshkey17.private bandit17@bandit.labs.overthewire.org -p 2220
      cat /etc/bandit_pass/bandit17
      ```
-
+* **Bài học cốt lõi:**
+  * **Lệnh `nmap` (Network Mapper):** Công cụ trinh sát tiêu chuẩn. Cờ `-sV` (Service Version) là chìa khóa để vạch trần bản chất phần mềm thực sự đang chạy ngầm sau một cổng, giúp phân biệt mục tiêu thật và honeypot (bẫy mồi).
+  * **Chiến dịch tấn công mạng:** Bài học này mô phỏng trọn vẹn một quy trình thực chiến: Trinh sát hệ thống (Nmap) ➔ Xuyên thủng bảo mật (OpenSSL) ➔ Hậu khai thác và Leo quyền (SSH Key).
+  * **Tư duy Không gian (Local vs Remote):** Hệ thống chặn kết nối SSH từ `localhost` là một rào cản kỹ thuật buộc người chơi phải ý thức được vị trí thực thi dòng lệnh: Phải luôn rút lui về Local để đúc chìa khóa, không được làm trên máy chủ mục tiêu.
 
 
      ## 🟢 Level 17 -> 18
@@ -58,10 +61,7 @@
   * **Lệnh `diff` (Difference):** Công cụ cốt lõi trong Linux dùng để so sánh toàn diện hai tệp tin. Dấu `<` chỉ dữ liệu cũ, dấu `>` chỉ dữ liệu mới.
   * **Ứng dụng thực tiễn:** Trong hoạt động phân tích pháp y kỹ thuật số (Digital Forensics) và kiểm thử xâm nhập (Pentest), việc dò tìm bằng mắt thường là bất khả thi. Lệnh `diff` là vũ khí tiêu chuẩn để kiểm tra tính toàn vẹn của dữ liệu (Data Integrity Check), giúp dò ra những dòng mã độc hoặc cấu hình đã bị hacker âm thầm thay đổi.
   * **Lưu ý chiến thuật:** Đề bài đã cảnh báo trước về cơ chế bẫy "Byebye!" của Level 18. Máy chủ sẽ tự động ngắt kết nối ngay khi đăng nhập. Đây là tín hiệu báo trước bài học tiếp theo sẽ liên quan đến kỹ thuật vượt ngục môi trường shell (Escape Shell).
-* **Bài học cốt lõi:**
-  * **Lệnh `nmap` (Network Mapper):** Công cụ trinh sát tiêu chuẩn. Cờ `-sV` (Service Version) là chìa khóa để vạch trần bản chất phần mềm thực sự đang chạy ngầm sau một cổng, giúp phân biệt mục tiêu thật và honeypot (bẫy mồi).
-  * **Chiến dịch tấn công mạng:** Bài học này mô phỏng trọn vẹn một quy trình thực chiến: Trinh sát hệ thống (Nmap) ➔ Xuyên thủng bảo mật (OpenSSL) ➔ Hậu khai thác và Leo quyền (SSH Key).
-  * **Tư duy Không gian (Local vs Remote):** Hệ thống chặn kết nối SSH từ `localhost` là một rào cản kỹ thuật buộc người chơi phải ý thức được vị trí thực thi dòng lệnh: Phải luôn rút lui về Local để đúc chìa khóa, không được làm trên máy chủ mục tiêu.
+
  
 
 ## 🟢 Level 19 -> 20 
@@ -88,3 +88,26 @@
   * **Đặc quyền SUID (Set owner User ID):** Cơ chế ma thuật của Linux. Khi một file có cờ `s` được chạy, tiến trình đó sẽ mang quyền hạn của **người tạo ra file** thay vì **người bấm nút chạy**. 
   * **Leo thang đặc quyền (Privilege Escalation):** Trong thực chiến Pentest hoặc các giải đấu CTF (mảng Pwn/Boot2Root), việc săn lùng các file có cờ SUID cấu hình lỏng lẻo là kỹ thuật kinh điển để Hacker từ một tài khoản "khách" leo lên chiếm quyền "Quản trị viên" (Root).
   * **Cú pháp `./`:** Phân biệt rõ lệnh toàn cục (như `cat`, `ls`) và tệp thực thi nội bộ. Ký hiệu `./` chỉ định hệ điều hành chạy chính xác file đang nằm trong thư mục hiện tại.
+ 
+## 🟢 Level 20 -> 21 (Day 19)
+* **Mục tiêu:** Tương tác với tệp thực thi SUID `suconnect`. Tệp này đóng vai trò là một Client, tự động kết nối đến một cổng mạng được chỉ định và kiểm tra mật khẩu. Nhiệm vụ là phải thiết lập một Server ngầm để đón đầu và cung cấp mật khẩu cũ cho nó.
+* **Cách giải:**
+  1. Đăng nhập vào `bandit20` và đọc mật khẩu của tài khoản hiện tại để làm "vật tế thần":
+     ```bash
+     cat /etc/bandit_pass/bandit20
+     ```
+     *(Giả sử mật khẩu lấy được là: VxCazJaV...)*
+  2. Khởi tạo một máy chủ lắng nghe ngầm (Server). Sử dụng `echo` kết hợp đường ống `|` để nạp sẵn mật khẩu, ném vào công cụ `nc` đang mở chốt ở cổng `4444`, và dùng `&` để ẩn toàn bộ tiến trình này xuống nền:
+     ```bash
+     echo "VxCazJaV..." | nc -l -p 4444 &
+     ```
+  3. Khởi chạy công cụ (Client) và điều hướng nó lao thẳng vào cổng `4444` vừa mở:
+     ```bash
+     ./suconnect 4444
+     ```
+  4. Hệ thống ngầm giao dịch thành công. Thu thập chuỗi mật khẩu của `bandit21` được in ra trên Terminal.
+
+* **Bài học cốt lõi:**
+  * **Mô hình Client - Server:** Hiểu được luồng giao tiếp mạng cơ bản. Netcat (`nc -l`) đóng vai trò là Server đứng đợi, `suconnect` đóng vai trò là Client chủ động tìm đến.
+  * **Toán tử Pipe (`|`):** Kỹ thuật chuyển hướng đầu ra (Output) của lệnh này làm đầu vào (Input) của lệnh khác. Ở đây là tự động hóa việc "nhét" dữ liệu thay vì gõ tay.
+  * **Job Control (`&`):** Kỹ thuật quản lý tiến trình cốt lõi trong Linux. Giúp đẩy một tác vụ xuống chạy ngầm (Background), giải phóng màn hình Terminal để tiếp tục thực thi các câu lệnh khác, giải quyết triệt để bài toán đa nhiệm trên một giao diện đơn.
