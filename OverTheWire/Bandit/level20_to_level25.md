@@ -1,4 +1,4 @@
-## 🟢 Level 20 -> 21 (Day 19)
+## 🟢 Level 20 -> 21 
 * **Mục tiêu:** Tương tác với tệp thực thi SUID `suconnect`. Tệp này đóng vai trò là một Client, tự động kết nối đến một cổng mạng được chỉ định và kiểm tra mật khẩu. Nhiệm vụ là phải thiết lập một Server ngầm để đón đầu và cung cấp mật khẩu cũ cho nó.
 * **Cách giải:**
   1. Đăng nhập vào `bandit20` và đọc mật khẩu của tài khoản hiện tại để làm "vật tế thần":
@@ -23,7 +23,7 @@
  
 
 
-## 🟢 Level 21 -> 22 (Day 20)
+## 🟢 Level 21 -> 22 
 * **Mục tiêu:** Thám thính dịch vụ lập lịch tự động `cron` của hệ điều hành. Phân tích luồng thực thi của một cronjob để truy vết vị trí mật khẩu bị rò rỉ.
 * **Cách giải:**
   1. Xâm nhập vào thư mục cấu hình lịch trình hệ thống:
