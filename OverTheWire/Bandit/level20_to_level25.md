@@ -55,32 +55,28 @@
 
 
 
-## 🟢 Level 21 -> 22 (Day 20)
-* **Mục tiêu:** Thám thính dịch vụ lập lịch tự động `cron` của hệ điều hành. Phân tích luồng thực thi của một cronjob để truy vết vị trí mật khẩu bị rò rỉ.
+## 🟢 Level 22 -> 23
+* **Mục tiêu:** Truy tìm mật khẩu của `bandit23` bị một tiến trình `cron` tự động giấu đi. Điểm khó là tên tệp tin cất giấu không cố định mà được tạo ra ngẫu nhiên thông qua một thuật toán băm (Hashing Algorithm).
 * **Cách giải:**
-  1. Xâm nhập vào thư mục cấu hình lịch trình hệ thống:
+  1. Thám thính cấu hình lịch trình tự động trong thư mục `/etc/cron.d/`:
      ```bash
-     cd /etc/cron.d/
-     ls -la
+     cat /etc/cron.d/cronjob_bandit23
      ```
-  2. Đọc bản hợp đồng lập lịch của mục tiêu `bandit22`:
+  2. Phân tích tĩnh (Static Analysis) kịch bản thực thi `/usr/bin/cronjob_bandit23.sh` để hiểu cơ chế hoạt động của thuật toán tạo tên file.
+     *(Phát hiện hệ thống sử dụng thuật toán: `echo I am user <tên_user> | md5sum | cut -d ' ' -f 1` để tạo tên file nằm trong `/tmp/`).*
+  3. Mô phỏng lại thuật toán (Algorithm Simulation). Bắt chước chính xác luồng xử lý của hệ thống nhưng thay biến số bằng mục tiêu `bandit23` để tự tính ra tên file bí mật:
      ```bash
-     cat cronjob_bandit22
+     echo "I am user bandit23" | md5sum | cut -d ' ' -f 1
      ```
-     *(Phát hiện cấu hình: Cứ mỗi phút, hệ thống tự động sử dụng đặc quyền của `bandit22` để chạy tệp kịch bản `/usr/bin/cronjob_bandit22.sh`).*
-  3. Đọc mã nguồn của tệp kịch bản để xem nó làm gì:
+     *(Kết quả tính toán trả về chuỗi hash: `8ca319486bfbbc3663ea0fbe81326349`).*
+  4. Truy cập vào thư mục tạm và đọc file theo đúng cái tên vừa tính ra để thu thập mật khẩu:
      ```bash
-     cat /usr/bin/cronjob_bandit22.sh
-     ```
-     *(Phân tích mã nguồn: Kịch bản này sao chép mật khẩu từ `/etc/bandit_pass/bandit22` ra một tệp tin tạm tại `/tmp/t7O6lds9S0RqQh9aMcz6ShpAoZKF7fgv` và thiết lập quyền đọc cho mọi người).*
-  4. Thu thập chiến lợi phẩm từ thư mục tạm:
-     ```bash
-     cat /tmp/t7O6lds9S0RqQh9aMcz6ShpAoZKF7fgv
+     cat /tmp/8ca319486bfbbc3663ea0fbe81326349
      ```
   5. Mật khẩu thu thập được:
-     * `tRae0UfB9v0UzbCdn9cY0gQnds9GF58Q`
+     * `QYw0Y2aiA672PsMmh9puTQuhoz8SyR2G`
 
 * **Bài học cốt lõi:**
-  * **Cấu trúc cấu hình Cron:** Hiểu cú pháp thời gian (`* * * * *`), định danh người dùng thực thi, và đường dẫn kịch bản bên trong `/etc/cron.d/`.
-  * **Lỗ hổng Logic (Logic Flaw):** Lỗ hổng không nằm ở việc sai cú pháp lệnh, mà nằm ở quy trình luân chuyển dữ liệu bất cẩn (Mang dữ liệu nhạy cảm ra thư mục công cộng `/tmp/` và cấp quyền `644`).
-  * **Cronjob Privilege Escalation:** Kỹ thuật lợi dụng các công việc tự động chạy dưới quyền cao hơn để trích xuất thông tin hoặc leo thang đặc quyền.
+  * **Xử lý chuỗi (Text Processing):** Sức mạnh của Pipeline (`|`) trong việc kết nối các công cụ nhỏ thành một dây chuyền lớn. `md5sum` dùng để mã hóa đầu vào thành chuỗi băm duy nhất, `cut` dùng để làm sạch và bóc tách dữ liệu rác.
+  * **Tính tất định của thuật toán (Deterministic Algorithm):** Cùng một đầu vào (input) truyền qua một thuật toán cố định sẽ luôn cho ra một đầu ra (output) duy nhất, bất kể ai là người thực thi lệnh đó. Đây là cơ sở để Hacker bẻ khóa hoặc mô phỏng lại các luồng dữ liệu bảo mật.
+  * **Kỹ năng Debug:** Khi phân tích tĩnh (đọc mã nguồn) quá khó hiểu, hãy tiến hành phân tích động (chạy thử kịch bản) để xem dữ liệu rác/thông báo lỗi in ra. Từ đó hiểu được logic của người viết mã.
