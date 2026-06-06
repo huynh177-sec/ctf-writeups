@@ -52,3 +52,35 @@
   * **Cấu trúc cấu hình Cron:** Hiểu cú pháp thời gian (`* * * * *`), định danh người dùng thực thi, và đường dẫn kịch bản bên trong `/etc/cron.d/`.
   * **Lỗ hổng Logic (Logic Flaw):** Lỗ hổng không nằm ở việc sai cú pháp lệnh, mà nằm ở quy trình luân chuyển dữ liệu bất cẩn (Mang dữ liệu nhạy cảm ra thư mục công cộng `/tmp/` và cấp quyền `644`).
   * **Cronjob Privilege Escalation:** Kỹ thuật lợi dụng các công việc tự động chạy dưới quyền cao hơn để trích xuất thông tin hoặc leo thang đặc quyền.
+
+
+
+## 🟢 Level 21 -> 22 (Day 20)
+* **Mục tiêu:** Thám thính dịch vụ lập lịch tự động `cron` của hệ điều hành. Phân tích luồng thực thi của một cronjob để truy vết vị trí mật khẩu bị rò rỉ.
+* **Cách giải:**
+  1. Xâm nhập vào thư mục cấu hình lịch trình hệ thống:
+     ```bash
+     cd /etc/cron.d/
+     ls -la
+     ```
+  2. Đọc bản hợp đồng lập lịch của mục tiêu `bandit22`:
+     ```bash
+     cat cronjob_bandit22
+     ```
+     *(Phát hiện cấu hình: Cứ mỗi phút, hệ thống tự động sử dụng đặc quyền của `bandit22` để chạy tệp kịch bản `/usr/bin/cronjob_bandit22.sh`).*
+  3. Đọc mã nguồn của tệp kịch bản để xem nó làm gì:
+     ```bash
+     cat /usr/bin/cronjob_bandit22.sh
+     ```
+     *(Phân tích mã nguồn: Kịch bản này sao chép mật khẩu từ `/etc/bandit_pass/bandit22` ra một tệp tin tạm tại `/tmp/t7O6lds9S0RqQh9aMcz6ShpAoZKF7fgv` và thiết lập quyền đọc cho mọi người).*
+  4. Thu thập chiến lợi phẩm từ thư mục tạm:
+     ```bash
+     cat /tmp/t7O6lds9S0RqQh9aMcz6ShpAoZKF7fgv
+     ```
+  5. Mật khẩu thu thập được:
+     * `tRae0UfB9v0UzbCdn9cY0gQnds9GF58Q`
+
+* **Bài học cốt lõi:**
+  * **Cấu trúc cấu hình Cron:** Hiểu cú pháp thời gian (`* * * * *`), định danh người dùng thực thi, và đường dẫn kịch bản bên trong `/etc/cron.d/`.
+  * **Lỗ hổng Logic (Logic Flaw):** Lỗ hổng không nằm ở việc sai cú pháp lệnh, mà nằm ở quy trình luân chuyển dữ liệu bất cẩn (Mang dữ liệu nhạy cảm ra thư mục công cộng `/tmp/` và cấp quyền `644`).
+  * **Cronjob Privilege Escalation:** Kỹ thuật lợi dụng các công việc tự động chạy dưới quyền cao hơn để trích xuất thông tin hoặc leo thang đặc quyền.
